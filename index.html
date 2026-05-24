@@ -1,80 +1,518 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure File Transfer</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            background-color: #ffffff;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .header {
-            text-align: center;
-            color: #333;
-            padding-bottom: 10px;
-        }
-        .message {
-            font-size: 16px;
-            line-height: 1.5;
-            color: #555;
-        }
-        .important {
-            font-weight: bold;
-            color: #d9534f;
-        }
-        .footer {
-            margin-top: 30px;
-            font-size: 12px;
-            color: #aaa;
-            text-align: center;
-        }
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
-        .button:hover {
-            background-color: #45a049;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Secure File Transfer – VAB RCM Group, INC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0b0f1a;
+      font-family: 'Source Sans 3', sans-serif;
+      font-weight: 400;
+      color: #cdd5e0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px;
+    }
+
+    /* ── Email wrapper ── */
+    .email-outer {
+      width: 100%;
+      max-width: 640px;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: #0e1423;
+      border: 1px solid #1e2d4a;
+      border-bottom: none;
+      border-radius: 10px 10px 0 0;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #e55; }
+    .dot-y { background: #da0; }
+    .dot-g { background: #5c5; }
+    .topbar-label {
+      margin-left: auto;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #3a5278;
+      font-weight: 600;
+    }
+
+    /* ── Email card ── */
+    .email-card {
+      background: #111827;
+      border: 1px solid #1e2d4a;
+      border-radius: 0 0 10px 10px;
+      overflow: hidden;
+      animation: fadeUp 0.7s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Header ── */
+    .email-header {
+      background: linear-gradient(135deg, #0d1f3c 0%, #102040 60%, #0a1a30 100%);
+      padding: 40px 44px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .email-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 18px,
+        rgba(255,255,255,0.012) 18px,
+        rgba(255,255,255,0.012) 19px
+      );
+    }
+    .shield-wrap {
+      position: relative;
+      width: 54px;
+      height: 54px;
+      margin-bottom: 22px;
+    }
+    .shield-wrap svg { width: 54px; height: 54px; }
+    .brand-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #e8eef8;
+      letter-spacing: 0.5px;
+      line-height: 1.2;
+    }
+    .brand-sub {
+      font-size: 11px;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: #3a80c8;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+    .header-divider {
+      margin: 20px 0 0;
+      height: 1px;
+      background: linear-gradient(90deg, #1e3d6e, #2a6cb4 40%, transparent);
+    }
+
+    /* ── Meta row ── */
+    .meta-row {
+      background: #0e1524;
+      padding: 16px 44px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 24px;
+      border-bottom: 1px solid #1a2840;
+    }
+    .meta-item { display: flex; flex-direction: column; }
+    .meta-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #3a5278;
+      font-weight: 600;
+    }
+    .meta-value {
+      font-size: 13.5px;
+      color: #a8bcd4;
+      margin-top: 2px;
+    }
+
+    /* ── Body ── */
+    .email-body {
+      padding: 38px 44px 32px;
+    }
+
+    .greeting {
+      font-family: 'Playfair Display', serif;
+      font-size: 19px;
+      color: #d8e4f2;
+      margin-bottom: 18px;
+    }
+
+    .body-text {
+      font-size: 14.5px;
+      line-height: 1.75;
+      color: #8fa5bf;
+      margin-bottom: 16px;
+    }
+
+    /* ── Secure file box ── */
+    .file-box {
+      background: #0d1929;
+      border: 1px solid #1e3560;
+      border-left: 3px solid #2a7de1;
+      border-radius: 8px;
+      padding: 20px 22px;
+      margin: 26px 0;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+    .file-icon {
+      flex-shrink: 0;
+      width: 42px; height: 42px;
+      background: #102040;
+      border: 1px solid #1e3a60;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .file-icon svg { width: 22px; height: 22px; }
+    .file-info { flex: 1; min-width: 0; }
+    .file-name {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #c5d8f0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .file-meta {
+      font-size: 11.5px;
+      color: #3f5f82;
+      margin-top: 3px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(42,125,225,0.12);
+      border: 1px solid rgba(42,125,225,0.25);
+      color: #5baef5;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 30px;
+      flex-shrink: 0;
+    }
+
+    /* ── CTA ── */
+    .cta-wrap {
+      text-align: center;
+      margin: 30px 0 8px;
+    }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #1a5fb8, #2a7de1);
+      color: #e8f0fb;
+      font-family: 'Source Sans 3', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 14px 34px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: box-shadow 0.25s, transform 0.2s;
+      box-shadow: 0 4px 24px rgba(42,125,225,0.25);
+    }
+    .cta-btn:hover {
+      box-shadow: 0 6px 32px rgba(42,125,225,0.45);
+      transform: translateY(-1px);
+    }
+    .cta-note {
+      font-size: 11.5px;
+      color: #3a5278;
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    /* ── Security notices ── */
+    .notices {
+      margin: 28px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: #0d1929;
+      border: 1px solid #172640;
+      border-radius: 7px;
+      padding: 13px 16px;
+    }
+    .notice-icon {
+      flex-shrink: 0;
+      width: 18px; height: 18px;
+      margin-top: 1px;
+      color: #2a7de1;
+    }
+    .notice-text {
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #6a8aaa;
+    }
+    .notice-text strong { color: #8faac8; font-weight: 600; }
+
+    /* ── Divider ── */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #1a2c48, transparent);
+      margin: 30px 0;
+    }
+
+    /* ── Signature ── */
+    .signature {
+      font-size: 13.5px;
+      line-height: 1.8;
+      color: #7a96b4;
+    }
+    .sig-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      color: #c5d8f0;
+      margin-top: 4px;
+    }
+    .sig-title { font-size: 12px; color: #3f6088; letter-spacing: 0.5px; }
+
+    /* ── Footer ── */
+    .email-footer {
+      background: #0a1020;
+      border-top: 1px solid #141f34;
+      padding: 22px 44px;
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: #2a4870;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .footer-text {
+      font-size: 11px;
+      color: #1e3052;
+      line-height: 1.7;
+    }
+    .footer-links {
+      margin-top: 10px;
+      font-size: 11px;
+    }
+    .footer-links a {
+      color: #2a5a8c;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+    .footer-links a:hover { color: #5baef5; }
+    .lock-strip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      margin-top: 14px;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #1e3560;
+      font-weight: 600;
+    }
+    .lock-strip svg { width: 12px; height: 12px; color: #1e4070; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h2>Secure File Transfer Notification</h2>
-        </div>
-        <div class="message">
-            <p>Hello [Recipient Name],</p>
-            <p>We are sending you a file securely using our trusted file transfer system. Please follow the instructions below to access the file.</p>
-            <p><span class="important">Important:</span> For your security, the file is encrypted. You will need the provided password to access the contents of the file.</p>
-            <p><strong>Instructions:</strong></p>
-            <ul>
-                <li>Click on the button below to access the file transfer portal.</li>
-                <li>Once you are redirected, use the password <strong>[Password]</strong> to download the file securely.</li>
-            </ul>
-            <a href="[File Transfer Link]" class="button">Access Your File</a>
-            <p>If you have any issues or questions, please feel free to reach out to us.</p>
-        </div>
-        <div class="footer">
-            <p>This email is intended for the recipient only. If you received this email by mistake, please notify us immediately and delete it from your inbox.</p>
-            <p>&copy; 2026 [Your Company Name]. All rights reserved.</p>
-        </div>
+<div class="email-outer">
+
+  <!-- Browser chrome illusion -->
+  <div class="topbar">
+    <span class="dot dot-r"></span>
+    <span class="dot dot-y"></span>
+    <span class="dot dot-g"></span>
+    <span class="topbar-label">Secure Message</span>
+  </div>
+
+  <div class="email-card">
+
+    <!-- Header -->
+    <div class="email-header">
+      <div class="shield-wrap">
+        <svg viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M27 4L8 12v14c0 11.5 8.2 22.3 19 25 10.8-2.7 19-13.5 19-25V12L27 4z"
+                fill="#0d2040" stroke="#2a7de1" stroke-width="1.5"/>
+          <path d="M27 8L11 15v11c0 9.5 6.8 18.3 16 20.7 9.2-2.4 16-11.2 16-20.7V15L27 8z"
+                fill="rgba(42,125,225,0.08)"/>
+          <path d="M21 27l4 4 9-9" stroke="#2a7de1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="brand-name">VAB RCM Group, INC</div>
+      <div class="brand-sub">Secure File Transfer Portal</div>
+      <div class="header-divider"></div>
     </div>
+
+    <!-- Meta -->
+    <div class="meta-row">
+      <div class="meta-item">
+        <span class="meta-label">From</span>
+        <span class="meta-value">secure@vabrcmgroup.com</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Date</span>
+        <span class="meta-value" id="send-date"></span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">To</span>
+        <span class="meta-value">recipient@example.com</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Encryption</span>
+        <span class="meta-value">AES-256 / TLS 1.3</span>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="email-body">
+
+      <div class="greeting">Dear Valued Client,</div>
+
+      <p class="body-text">
+        VAB RCM Group, INC has securely shared a file with you through our encrypted file transfer system. This transmission meets HIPAA and SOC 2 compliance standards to protect the confidentiality of your information.
+      </p>
+      <p class="body-text">
+        Please use the button below to access and download your file. The link is unique to you and will expire after <strong style="color:#8faac8;">72 hours</strong>.
+      </p>
+
+      <!-- File attachment block -->
+      <div class="file-box">
+        <div class="file-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#2a7de1" stroke-width="1.8"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="9" y1="13" x2="15" y2="13"/>
+            <line x1="9" y1="17" x2="12" y2="17"/>
+          </svg>
+        </div>
+        <div class="file-info">
+          <div class="file-name">VAB_RCM_SecureDocument.pdf</div>
+          <div class="file-meta">Encrypted · Expires in 72 hrs · Ref #VRG-2026-0524</div>
+        </div>
+        <div class="badge">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          Encrypted
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-wrap">
+        <a href="#" class="cta-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Access Secure File
+        </a>
+        <div class="cta-note">Button opens a verified, encrypted VAB RCM portal page.</div>
+      </div>
+
+      <!-- Security notices -->
+      <div class="notices">
+        <div class="notice">
+          <svg class="notice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <div class="notice-text">
+            <strong>Did not expect this message?</strong> Do not click any links. Contact our support team at
+            <strong>support@vabrcmgroup.com</strong> or call <strong>(555) 000-1234</strong> immediately.
+          </div>
+        </div>
+        <div class="notice">
+          <svg class="notice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <div class="notice-text">
+            <strong>VAB RCM Group will never ask</strong> for your password, social security number, or full payment details via email or through this portal.
+          </div>
+        </div>
+        <div class="notice">
+          <svg class="notice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          <div class="notice-text">
+            This transfer is protected under <strong>HIPAA</strong>, <strong>SOC 2 Type II</strong>, and
+            <strong>AES-256 encryption</strong> standards. All access attempts are logged and audited.
+          </div>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- Signature -->
+      <div class="signature">
+        Warm regards,<br>
+        <div class="sig-name">VAB RCM Group, INC</div>
+        <div class="sig-title">Revenue Cycle Management · Secure Communications Team</div>
+      </div>
+
+    </div><!-- /email-body -->
+
+    <!-- Footer -->
+    <div class="email-footer">
+      <div class="footer-logo">VAB RCM Group, INC</div>
+      <div class="footer-text">
+        This message and any attachments are confidential and intended solely for the named recipient.<br>
+        Unauthorized disclosure or use is strictly prohibited and may be unlawful.
+      </div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Unsubscribe</a>
+        <a href="#">Contact Support</a>
+      </div>
+      <div class="lock-strip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        End-to-End Encrypted · TLS 1.3 · AES-256
+      </div>
+    </div>
+
+  </div><!-- /email-card -->
+</div>
+
+<script>
+  // Inject current date
+  const d = new Date();
+  document.getElementById('send-date').textContent = d.toLocaleDateString('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
+</script>
 </body>
 </html>
